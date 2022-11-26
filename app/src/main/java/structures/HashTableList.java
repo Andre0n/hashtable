@@ -2,6 +2,16 @@ package structures;
 
 import java.util.Objects;
 
+/**
+ * Hash table based implementation of the {@code Dictionary} interface.
+ *
+ * <p>This implementation uses size tables of powers of two, following the standard Java
+ * implementation. The reason is basically to avoid costs by using Bitwise operators.
+ *
+ * @see Object#hashCode()
+ * @see Dictionary
+ * @author André Gabriel
+ */
 public class HashTableList<K, V> implements Dictionary<K, V> {
 
   /** The default initial capacity - MUST be a power of two. */
