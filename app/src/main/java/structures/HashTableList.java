@@ -187,7 +187,11 @@ public class HashTableList<K, V> implements Dictionary<K, V> {
 
   @Override
   public V remove(Object key) {
-    return null;
+    if (key == null) {
+      throw new NullPointerException("Illegal key value");
+    }
+    Node<K, V> e = removeNode(hash(key), key);
+    return e == null ? null : e.value;
   }
 
   /**
