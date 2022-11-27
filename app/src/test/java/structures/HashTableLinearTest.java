@@ -15,23 +15,19 @@ class HashTableLinearTest {
   @Test
   void shouldHaveCorrectCapacities() {
     HashTableList<String, Integer> classUnderTest = new HashTableList<>();
-    assertEquals(
-        0, classUnderTest.capacity(), "HashTable must be have capacity equals to 0!");
+    assertEquals(0, classUnderTest.capacity(), "HashTable must be have capacity equals to 0!");
 
     classUnderTest = new HashTableList<>();
     classUnderTest.insert("test", 0); // Initialize the HashTable
-    assertEquals(
-        16, classUnderTest.capacity(), "HashTable must be have capacity equals to 16!");
+    assertEquals(16, classUnderTest.capacity(), "HashTable must be have capacity equals to 16!");
 
     classUnderTest = new HashTableList<>(12);
     classUnderTest.insert("test", 0); // Initialize the HashTable
-    assertEquals(
-        16, classUnderTest.capacity(), "HashTable must be have capacity equals to 16!");
+    assertEquals(16, classUnderTest.capacity(), "HashTable must be have capacity equals to 16!");
 
     classUnderTest = new HashTableList<>(17);
     classUnderTest.insert("test", 0); // Initialize the HashTable
-    assertEquals(
-        32, classUnderTest.capacity(), "HashTable must be have capacity equals to 32!");
+    assertEquals(32, classUnderTest.capacity(), "HashTable must be have capacity equals to 32!");
   }
 
   @Test
