@@ -229,6 +229,151 @@ public class RedBlackTree<K extends Comparable<K>, V> {
   }
 
   /**
+   * Deletes a node from tree.
+   *
+   * <p>This method call a fixup delete to re-balance the tree.
+   *
+   * @param z the node to be removed.
+   */
+  private void deleteTreeNode(TreeNode<K, V> z) {
+    if (z != null) {
+      TreeNode<K, V> y = z, x, zl = z.left, zr = z.right;
+      boolean oc = z.red;
+      y = z;
+      if (zl == null) {
+        x = zr;
+        rbTransplant(z, zr);
+      } else if (zr == null) {
+        rbTransplant(z, zl);
+      } else {
+        y = treeMin(zr);
+        oc = y.red;
+        x = y.right;
+        if (y.parent == z) {
+          x.parent = y;
+        } else {
+          rbTransplant(y, y.right);
+          y.right = zr;
+          y.right.parent = y;
+        }
+        rbTransplant(z, y);
+        y.left = z.left;
+        y.left.parent = y;
+        y.red = z.red;
+        if (!oc) {
+          fixDelete(x);
+        }
+      }
+    }
+  }
+
+  /**
+   * This method replaces a subtree as a child of its parent with another subtree.
+   *
+   * <p>following the Cormen book.
+   *
+   * @param u the root of the first subtree
+   * @param v the root of the second subtree
+   */
+  private void rbTransplant(TreeNode<K, V> u, TreeNode<K, V> v) {
+    TreeNode<K, V> up;
+    if ((up = u.parent) == null) {
+      this.root = v;
+    } else if (u != null && u == (up.left)) {
+      up.left = v;
+    } else {
+      up.right = v;
+    }
+    v.parent = u.parent;
+  }
+
+  /**
+   * This method returns the smallest node in a given tree.
+   *
+   * @param node the root of a tree.
+   * @return the smallest node from the tree.
+   */
+  private TreeNode<K, V> treeMin(TreeNode<K, V> node) {
+    TreeNode<K, V> cursor = node;
+    while (cursor.left != null) {
+      cursor = cursor.left;
+    }
+    return cursor;
+  }
+
+  /**
+   * This method restores properties after deletion.
+   *
+   * @param x the node to be fixed.
+   */
+  private void fixDelete(TreeNode<K, V> x) {
+    for (TreeNode<K, V> xp, xpl, xpr; ; ) {
+      if (x == null || x == this.root) {
+        return;
+      } else if ((xp = x.parent) == null) {
+        x.red = false;
+      } else if (x.red) {
+        x.red = false;
+      } else if ((xpl = xp.left) == x) {
+        if ((xpr = xp.right) != null && xpr.red) { // Case 1
+          xpr.red = false;
+          xp.red = true;
+          leftRotate(xp);
+          xpr = (xp = x.parent) == null ? null : xp.right;
+        }
+        if (xpr == null) x = xp;
+        else {
+          TreeNode<K, V> sl = xpr.left, sr = xpr.right;
+          if ((sr == null || !sr.red) && (sl == null || !sl.red)) { // Case 2
+            xpr.red = true;
+            x = xp;
+          } else {
+            if (sr == null || !sr.red) { // case 3
+              if (sl != null) sl.red = false;
+              xpr.red = true;
+              rightRotate(xpr);
+              xpr = (xp = x.parent) == null ? null : xp.right;
+            }
+          }
+        }
+      } else { // symmetric
+        if (xpl != null && xpl.red) {
+          xpl.red = false;
+          xp.red = true;
+          rightRotate(xp);
+          xpl = (xp = x.parent) == null ? null : xp.left;
+        }
+        if (xpl == null) x = xp;
+        else {
+          TreeNode<K, V> sl = xpl.left, sr = xpl.right;
+          if ((sl == null || !sl.red) && (sr == null || !sr.red)) {
+            xpl.red = true;
+            x = xp;
+          } else {
+            if (sl == null || !sl.red) {
+              if (sr != null) sr.red = false;
+              xpl.red = true;
+              leftRotate(xpl);
+              xpl = (xp = x.parent) == null ? null : xp.left;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * The remove node method.
+   *
+   * <p>Removes the values in a red-black tree node.
+   *
+   * @param node the node to be removed.
+   */
+  public void remove(TreeNode<K, V> node) {
+    deleteTreeNode(node);
+  }
+
+  /**
    * Prints the tree from a given node.
    *
    * @param n the node.
